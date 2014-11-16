@@ -13,9 +13,13 @@ NAME = xt_dns
 VERSION = 1.4
 DISTFILES = *.[ch] Makefile ChangeLog
 
-KVERSION = $(shell uname -r)
-KDIR = /lib/modules/$(KVERSION)/build
-MDIR = /lib/modules/$(KVERSION)/local/
+ifndef KERNELRELEASE
+KERNELRELEASE = $(shell uname -r)
+endif
+ifndef KDIR
+KDIR = /lib/modules/$(KERNELRELEASE)/build
+MDIR = /lib/modules/$(KERNELRELEASE)/local/
+endif
 XDIR = /lib/xtables/ /lib64/xtables/
 IPTABLES = iptables
 IP6TABLES = ip6tables
