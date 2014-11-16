@@ -41,6 +41,91 @@ void debug_dump_buf(u8 *dns, size_t len, size_t offset, char *title) {
 #define MAX_MTU 2000
 static u8 pktbuf[MAX_MTU]; /* buffer for whole packet in case skb is fragmented */
 
+static int readname_loop(char *packet, int packetlen, char *src, char *dst, size_t length, size_t loop){
+	char *dummy;
+	char *s;
+	char *d;
+	int len;
+	int offset;
+	char c;
+
+	if (loop <= 0)
+		return 0;
+
+	len = 0;
+	s = src;
+	d = dst;
+	while(*s && len < length - 2) {
+		c = *s++;
+
+		/* is this a compressed label? */
+		if((c & 0xc0) == 0xc0) {
+			offset = (((s[-1] & 0x3f) << 8) | (s[0] & 0xff));
+			if (offset > packetlen) {
+				if (len == 0) {
+					/* Bad jump first in packet */
+					return 0;
+				} else {
+					/* Bad jump after some data */
+					break;
+				}
+			}
+			dummy = packet + offset;
+			len += readname_loop(packet, packetlen, dummy, d, length - len, loop - 1);
+			goto end;
+		}
+
+		while(c && len < length - 1) {
+			*d++ = *s++;
+			len++;
+
+			c--;
+		}
+
+		if (len >= length - 1) {
+			break; /* We used up all space */
+		}
+
+		if (*s != 0) {
+			*d++ = '.';
+			len++;
+		}
+	}
+	dst[len++] = '\0';
+
+end:
+	src = s+1;
+	return len;
+}
+
+int readname(char *packet, int packetlen, char *src, char *dst, size_t length){
+	return readname_loop(packet, packetlen, src, dst, length, 10);
+}
+
+
+static int is_inside_zone(char *dns, size_t len, size_t offset, const char * zone, int zone_len){
+	char name[XT_DNS_MAX_NAME_LEN];
+	int domain_len;
+	int inside_zone = 0;
+	int data_len = len - (offset);
+	char data[data_len];
+	int name_len;
+	strncpy(data, dns + (offset), data_len);
+	name_len = readname(dns, len, data, name, XT_DNS_MAX_NAME_LEN) - 1;
+	if(name_len<=0)
+		return 0;
+	domain_len = name_len - zone_len;
+	NFDEBUG("domain_len:%d, zone_len:%d, name_len:%d\n", domain_len, zone_len, name_len);
+	debug_dump_buf(name, name_len, 0, "name:");
+	debug_dump_buf(zone, zone_len, 0, "zone:");
+	if (domain_len >= 0 && !strncasecmp(name + domain_len, zone, zone_len))
+		inside_zone = 1;
+	// require dot before topdomain
+	if (domain_len >= 1 && name[domain_len - 1] != '.')
+		inside_zone = 0;
+	return inside_zone;
+}
+
 static bool skip_name(u8 *dns, size_t len, size_t *offset) {
 	/* skip labels */
 	debug_dump_buf(dns, len, *offset, "skip_name");
@@ -84,6 +169,7 @@ static bool dns_mt(const struct sk_buff *skb, struct xt_action_param *par)
 #endif
 {
 	const struct xt_dns_info *info = par->matchinfo;
+	XT_DNS_HEADER * dns_header;
 
 	u8 *dns;
 	size_t len, offset;
@@ -117,6 +203,8 @@ static bool dns_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	NFDEBUG("skb->len: %d, skb->data_len: %d, len: %zu\n", skb->len, skb->data_len, len);
 	debug_dump_buf(dns, len, 0, "ipt_dns");
 
+	dns_header = (XT_DNS_HEADER *) dns;
+
 	/* check if we are dealing with DNS query */
 	if (info->flags & XT_DNS_QUERY) {
 		invert = ((info->invert_flags & XT_DNS_QUERY) != 0);
@@ -148,7 +236,7 @@ static bool dns_mt(const struct sk_buff *skb, struct xt_action_param *par)
 			goto qtype_out;
 
 		/* offset is set to the first question section */
-		offset = 12;
+		offset = sizeof(XT_DNS_HEADER);
 		is_match = skip_name(dns, len, &offset);
 		if (!is_match)
 			goto qtype_out;
@@ -168,7 +256,7 @@ static bool dns_mt(const struct sk_buff *skb, struct xt_action_param *par)
 		invert = ((info->invert_flags & XT_DNS_EDNS0) != 0);
 		is_match = counts[3] > 0; /* arcount at least 1 */
 		
-		offset = 12;
+		offset = sizeof(XT_DNS_HEADER);
 		/* skip query sections */
 		for (i=0; i<counts[0]; i++) {
 			is_match &= skip_name(dns, len, &offset);
@@ -213,6 +301,24 @@ static bool dns_mt(const struct sk_buff *skb, struct xt_action_param *par)
 		if (is_match == invert)
 			return false;
 		
+	}
+
+	/* zone test */
+	if (info->flags & XT_DNS_ZONE){
+		NFDEBUG("Entering zone match\n");
+		invert = ((info->invert_flags & XT_DNS_ZONE) != 0);
+		is_match = 0;
+		offset = sizeof(XT_DNS_HEADER);
+		if (info->flags & XT_DNS_QUERY && dns_header->qdcount > 0) {
+			if(is_inside_zone(dns, len, offset, info->zone, info->zone_len)){
+				is_match = 1;
+				NFDEBUG("Zone is matched !\n");
+			}
+		}
+		else if (info->flags & XT_DNS_RESPONSE) {
+		}
+		if (is_match == invert)
+			return false;
 	}
 
 	/* Nothing stopped us so far, let's accept the packet */

@@ -62,6 +62,7 @@ static const struct option dns_opts[] = {
 	{ .name = "query-type",		.has_arg = true,	.val = '3' },
 	{ .name = "edns0",		.has_arg = false,	.val = '4' },
 	{ .name = "bufsize",		.has_arg = true,	.val = '5' },
+	{ .name = "zone",		.has_arg = true,	.val = '6' },
 	XT_GETOPT_TABLEEND,
 };
 
@@ -149,7 +150,9 @@ static void dns_help(void)
 "[!] --query-type {A|NS|CNAME|SOA|PTR|MX|TXT|AAAA|SRV|A6|ANY|0-255}\n"
 "                       match specific query type\n"
 "[!] --edns0            match packets with EDNS0 field\n"
-"    --bufsize value[:value] match EDNS0 buffer size\n");
+"[!] --zone zone-name match request only to name under zone-name\n"
+"    --bufsize value[:value] match EDNS0 buffer size\n"
+);
 }
 
 static int dns_parse(int c, char **argv, int invert, unsigned int *flags,
@@ -222,6 +225,21 @@ static int dns_parse(int c, char **argv, int invert, unsigned int *flags,
 		info->flags |= XT_DNS_EDNS0 | XT_DNS_BUFSIZE; /* bufsize implies edns0 */
 		parse_uint16_range(optarg, info->bufsize);
 		return true;
+	case '6': /* zone */
+		if (*flags & XT_DNS_ZONE)
+                        xtables_error(PARAMETER_PROBLEM, "xt_dns: "
+                                 "Only use \"--%s\" once!", dns_opts[5].name);
+                if (invert)
+			info->invert_flags |= XT_DNS_ZONE;
+		*flags |= XT_DNS_ZONE;
+		info->flags |= XT_DNS_ZONE;
+		info->zone_len = strlen(optarg);
+		if(info->zone_len> XT_DNS_MAX_NAME_LEN - 1)
+			xtables_error(PARAMETER_PROBLEM, "xt_dns: "
+				"%s is too long!", dns_opts[5].name);
+		strcpy(info->zone, optarg);
+		return true;
+
 	}
 	return false;
 }
@@ -253,6 +271,10 @@ static void dns_print(const void *ip, const struct xt_entry_match *match, int nu
 			printf("qtype %s"S2, name);
 		else
 			printf("qtype %d"S2, info->qtype);
+	}
+	if (info->flags & XT_DNS_ZONE) {
+		printf("%s",S1);
+		printf("zone %s"S2, info->zone);
 	}
 	if (info->flags & XT_DNS_EDNS0) {
 		printf("%s",S1);
