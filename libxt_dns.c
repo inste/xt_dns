@@ -274,6 +274,8 @@ static void dns_print(const void *ip, const struct xt_entry_match *match, int nu
 	}
 	if (info->flags & XT_DNS_ZONE) {
 		printf("%s",S1);
+		if (info->invert_flags & XT_DNS_ZONE)
+			printf("!");
 		printf("zone %s"S2, info->zone);
 	}
 	if (info->flags & XT_DNS_EDNS0) {
@@ -315,6 +317,11 @@ static void dns_save(const void *ip, const struct xt_entry_match *match)
 			printf(S1"--%s %s"S2, dns_opts[2].name, name);
 		else
 			printf(S1"--%s %d"S2, dns_opts[2].name, info->qtype);
+	}
+	if (info->flags & XT_DNS_ZONE) {
+		if (info->invert_flags & XT_DNS_ZONE)
+			printf(S1"!"S2);
+		printf(S1"--%s %s"S2, dns_opts[5].name, info->zone);
 	}
 	if (info->flags & XT_DNS_EDNS0) {
 		if (info->invert_flags & XT_DNS_EDNS0)
