@@ -173,7 +173,7 @@ static int dns_parse(int c, char **argv, int invert, unsigned int *flags,
 		*flags |= XT_DNS_QUERY;
 		info->flags |= XT_DNS_QUERY;
 		if (invert)
-			info->invert_flags |= XT_DNS_QTYPE;
+			info->invert_flags |= XT_DNS_QUERY;
 		return true;
 
 	case '2': /* response */
