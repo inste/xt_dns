@@ -46,12 +46,16 @@ struct {
 	{ "NS", ns_t_ns },
 	{ "CNAME", ns_t_cname },
 	{ "SOA", ns_t_soa },
+	{ "WKS", ns_t_wks },
 	{ "PTR", ns_t_ptr },
 	{ "MX", ns_t_mx },
 	{ "TXT", ns_t_txt },
 	{ "AAAA", ns_t_aaaa },
+	{ "LOC", ns_t_loc },
 	{ "SRV", ns_t_srv },
-	{ "A6", ns_t_a6 },
+	{ "NAPTR", ns_t_naptr },
+        { "IXFR", ns_t_ixfr },
+        { "AXFR", ns_t_axfr },
 	{ "ANY", ns_t_any },
 	{ NULL },
 };
@@ -147,7 +151,7 @@ static void dns_help(void)
 "dns match options:\n"
 "[!] --dns-query        match DNS query\n"
 "[!] --dns-response     match DNS response\n"
-"[!] --query-type {A|NS|CNAME|SOA|PTR|MX|TXT|AAAA|SRV|A6|ANY|0-255}\n"
+"[!] --query-type {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}\n"
 "                       match specific query type\n"
 "[!] --edns0            match packets with EDNS0 field\n"
 "[!] --zone zone-name match request only to name under zone-name\n"
