@@ -3,3 +3,8 @@ apt-get install linux-headers-$(uname -r)
 make
 make install
 
+
+Install with dkms:
+dkms add -m xt_dns -v 1.0
+dkms autoinstall -k $(uname -r)
+
