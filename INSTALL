@@ -1,0 +1,5 @@
+Debian/Ubuntu:
+apt-get install linux-headers-$(uname -r)
+make
+make install
+
