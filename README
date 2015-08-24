@@ -19,6 +19,27 @@ The matching algorithm is fully RFC 1035 compliant.
 Only non-fragmented UDP packets are supported, both
 IPv4 and IPv6.
 
+Install
+-------
+
+Red Hat/CentOS:
+```
+yum install kernel-headers iptables-devel dkms
+wget https://github.com/spetr/xt_dns/archive/v2.0.tar.gz -O xt_dns-2.0.1.tar.gz
+tar -xzf xt_dns-2.0.1.tar.gz
+cd xt_dns-2.0.1
+make dkms
+```
+
+Debian/Ubuntu:
+```
+apt-get install linux-headers-$(uname -r) iptables-dev dkms
+wget https://github.com/spetr/xt_dns/archive/v2.0.tar.gz -O xt_dns-2.0.1.tar.gz
+tar -xzf xt_dns-2.0.1.tar.gz
+cd xt_dns-2.0.1
+make dkms
+```
+
 Usage
 -----
 
@@ -28,7 +49,7 @@ See `iptables -m dns --help`:
 dns match options:
 [!] --dns-query        match DNS query
 [!] --dns-response     match DNS response
-[!] --query-type {A|NS|CNAME|SOA|PTR|MX|TXT|AAAA|SRV|A6|ANY|0-255}
+[!] --query-type {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}
                        match specific query type
 [!] --edns0            match packets with EDNS0 field
 [!] --zone zone-name match request only to name under zone-name
