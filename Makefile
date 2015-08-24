@@ -51,16 +51,14 @@ libxt_dns.so: libxt_dns.c xt_dns.h config.h
 	$(CC) -fPIC -Wall -shared -o libxt_dns.so libxt_dns.c
 
 module-install: xt_dns.ko
-	sync
 	mkdir -p $(MDIR) || :
 	install *.ko $(MDIR)
 	depmod -a
-	sync
 
 userspace-install: libxt_dns.so
 	for xdir in $(XDIR); do \
 		if [ -d $${xdir} ]; then \
-			install *.so $${xdir}; \
+			install -m 644 *.so $${xdir}; \
 			break; \
 		fi; \
 	done
