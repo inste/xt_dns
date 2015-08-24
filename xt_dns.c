@@ -10,9 +10,6 @@
  *	License (GPL). Copies of the GPL can be obtained from gnu.org/gpl.
  */
 
-/* Linux kernel module */
-#define LINUX
-
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
