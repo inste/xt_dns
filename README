@@ -25,18 +25,18 @@ Install
 Red Hat/CentOS:
 ```
 yum install kernel-headers iptables-devel dkms
-wget https://github.com/spetr/xt_dns/archive/v2.0.1.tar.gz -O xt_dns-2.0.1.tar.gz
-tar -xzf xt_dns-2.0.1.tar.gz
-cd xt_dns-2.0.1
+wget https://github.com/spetr/xt_dns/archive/v2.0.2.tar.gz -O xt_dns-2.0.2.tar.gz
+tar -xzf xt_dns-2.0.2.tar.gz
+cd xt_dns-2.0.2
 make dkms
 ```
 
 Debian/Ubuntu:
 ```
 apt-get install linux-headers-$(uname -r) iptables-dev dkms
-wget https://github.com/spetr/xt_dns/archive/v2.0.1.tar.gz -O xt_dns-2.0.1.tar.gz
-tar -xzf xt_dns-2.0.1.tar.gz
-cd xt_dns-2.0.1
+wget https://github.com/spetr/xt_dns/archive/v2.0.2.tar.gz -O xt_dns-2.0.2.tar.gz
+tar -xzf xt_dns-2.0.2.tar.gz
+cd xt_dns-2.0.2
 make dkms
 ```
 
@@ -47,13 +47,13 @@ See `iptables -m dns --help`:
 
 ```
 dns match options:
-[!] --dns-query        match DNS query
-[!] --dns-response     match DNS response
-[!] --query-type {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}
-                       match specific query type
-[!] --edns0            match packets with EDNS0 field
-[!] --zone zone-name   match request only to name under zone-name
-    --bufsize value[:value] match EDNS0 buffer size
+[!] --dns-query            match DNS query
+[!] --dns-response         match DNS response
+[!] --dns-query-type       {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}
+                           match specific query type
+[!] --dns-edns0            match packets with EDNS0 field
+[!] --dns-zone zone-name   match request only to name under zone-name
+    --dns-bufsize value[:value] match EDNS0 buffer size
 ```
 
 Example usage
@@ -62,4 +62,9 @@ Example usage
 Classifying ANY-type DNS queries (massively abused for DNS Amplification attacks)
 and applying a very strict request rate limit:
 
-```# iptables -A INPUT -p udp --dport 53 -m dns --dns-query --query-type ANY -m hashlimit --hashlimit-above 10/min --hashlimit-burst 3 --hashlimit-mode srcip --hashlimit-name DNS-ANY -j DROP ```
+```# iptables -A INPUT -p udp --dport 53 \
+ -m dns --dns-query --dns-query-type ANY \
+ -m hashlimit --hashlimit-above 10/min --hashlimit-burst 3
+    --hashlimit-mode srcip --hashlimit-name DNS-ANY \
+ -j DROP ```
+

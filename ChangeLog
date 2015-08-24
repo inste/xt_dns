@@ -1,7 +1,6 @@
-2.0.1 : 2015.8.24
+2.0.2 : 2015.8.24
+	change options name
 	fix build with new kernels
-
-2.0.0 : 2015.08.24
 	fork project
 	update query types
 
