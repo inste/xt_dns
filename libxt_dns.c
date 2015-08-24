@@ -4,7 +4,8 @@
  *      based on libxt_dns (c) Ondrej Caletka, 2013
  *	based on libxt_dns (c) Bartlomiej Korupczynski, 2011
  *
- *	This is userspace part of module used to match DNS MX queries
+ *	This is userspace part of module used to match DNS query type,
+ *	zone name and all other DNS packet attributes.
  * 
  *	This file is distributed under the terms of the GNU General Public
  *	License (GPL). Copies of the GPL can be obtained from gnu.org/gpl.
