@@ -24,8 +24,6 @@ KDIR = /lib/modules/$(KERNELRELEASE)/build
 MDIR = /lib/modules/$(KERNELRELEASE)/local/
 endif
 XDIR = /lib/xtables/ /lib64/xtables/
-IPTABLES = iptables
-IP6TABLES = ip6tables
 
 obj-m = $(NAME).o
 
@@ -45,6 +43,7 @@ config.h: Makefile
 
 xt_dns.ko: xt_dns.c xt_dns.h config.h
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
+	strip -g xt_dns.ko
 
 # in case of problems add path to iptables sources like:
 # -I/usr/src/sources/iptables-1.4.2/include/
