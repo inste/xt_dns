@@ -11,9 +11,7 @@
  */
 
 /* Linux kernel module */
-#define MODULE
 #define LINUX
-#define __KERNEL__
 
 #include <linux/init.h>
 #include <linux/kernel.h>
