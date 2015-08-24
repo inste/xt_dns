@@ -10,7 +10,7 @@
 #
 
 NAME = xt_dns
-VERSION = 1.0
+VERSION = 2.0
 DISTFILES = *.[ch] Makefile ChangeLog
 
 ifndef KERNELRELEASE
