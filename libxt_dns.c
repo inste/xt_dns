@@ -65,10 +65,10 @@ struct {
 static const struct option dns_opts[] = {
 	{ .name = "dns-query",		.has_arg = false,	.val = '1' },
 	{ .name = "dns-response",	.has_arg = false,	.val = '2' },
-	{ .name = "query-type",		.has_arg = true,	.val = '3' },
-	{ .name = "edns0",		.has_arg = false,	.val = '4' },
-	{ .name = "bufsize",		.has_arg = true,	.val = '5' },
-	{ .name = "zone",		.has_arg = true,	.val = '6' },
+	{ .name = "dns-query-type",	.has_arg = true,	.val = '3' },
+	{ .name = "dns-edns0",		.has_arg = false,	.val = '4' },
+	{ .name = "dns-bufsize",	.has_arg = true,	.val = '5' },
+	{ .name = "dns-zone",		.has_arg = true,	.val = '6' },
 	XT_GETOPT_TABLEEND,
 };
 
@@ -151,13 +151,14 @@ static void dns_help(void)
 {
 	printf(
 "dns match options:\n"
-"[!] --dns-query        match DNS query\n"
-"[!] --dns-response     match DNS response\n"
-"[!] --query-type {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}\n"
-"                       match specific query type\n"
-"[!] --edns0            match packets with EDNS0 field\n"
-"[!] --zone zone-name match request only to name under zone-name\n"
-"    --bufsize value[:value] match EDNS0 buffer size\n"
+"[!] --dns-query           match DNS query\n"
+"[!] --dns-response        match DNS response\n"
+"[!] --dns-query-type      {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|\n"
+"                           IXFR|AXFR|ANY|0-255}\n"
+"                          match specific query type\n"
+"[!] --dns-edns0           match packets with EDNS0 field\n"
+"[!] --dns-zone zone-name  match request only to name under zone-name\n"
+"    --dns-bufsize value[:value] match EDNS0 buffer size\n"
 );
 }
 
