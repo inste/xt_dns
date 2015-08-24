@@ -10,7 +10,7 @@
 #
 
 NAME = xt_dns
-VERSION = 2.0
+VERSION = 2.0.1
 DISTFILES = *.[ch] Makefile ChangeLog
 
 DKMS_ROOT_PATH=/usr/src/$(NAME)-$(VERSION)

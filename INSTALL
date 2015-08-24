@@ -5,6 +5,5 @@ make install
 
 
 Install with dkms:
-dkms add -m xt_dns -v 2.0
-dkms autoinstall -k $(uname -r)
+make dkms
 
