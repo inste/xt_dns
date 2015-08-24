@@ -10,6 +10,11 @@
  *	License (GPL). Copies of the GPL can be obtained from gnu.org/gpl.
  */
 
+/* Linux kernel module */
+#define MODULE
+#define LINUX
+#define __KERNEL__
+
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -427,5 +432,4 @@ MODULE_DESCRIPTION("Xtables: DNS matcher");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("ipt_dns");
 MODULE_ALIAS("ip6t_dns");
-MODULE_VERSION(2,0);
 

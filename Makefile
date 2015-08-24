@@ -13,6 +13,8 @@ NAME = xt_dns
 VERSION = 2.0
 DISTFILES = *.[ch] Makefile ChangeLog
 
+DKMS_ROOT_PATH=/usr/src/$(NAME)-$(VERSION)
+
 ifndef KERNELRELEASE
 KERNELRELEASE = $(shell uname -r)
 endif
@@ -84,3 +86,15 @@ distcheck: dist
 	rm -rf tmp/$(NAME)-$(VERSION)
 	rmdir --ignore-fail-on-non-empty tmp
 	@echo OK: distcheck
+
+dkms:
+	@mkdir $(DKMS_ROOT_PATH)
+	@cp `pwd`/dkms.conf $(DKMS_ROOT_PATH)
+	@cp `pwd`/Makefile $(DKMS_ROOT_PATH)
+	@cp `pwd`/libxt_dns.c $(DKMS_ROOT_PATH)
+	@cp `pwd`/xt_dns.c $(DKMS_ROOT_PATH)
+	@cp `pwd`/xt_dns.h $(DKMS_ROOT_PATH)
+	@dkms add -m $(NAME) -v $(VERSION)
+	@dkms build -m $(NAME) -v $(VERSION)
+	@dkms install --force -m $(NAME) -v $(VERSION)
+
