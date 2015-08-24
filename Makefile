@@ -1,6 +1,7 @@
 #
 #	xt_dns Makefile
-#       Copyright (c) Ondrej Caletka, 2013
+#       Copyright (c) Stanislav Petr, 2015
+#       based on libxt_dns (c) Ondrej Caletka, 2013
 #	based on xt_dns Makefile (c) Bartlomiej Korupczynski, 2011
 #
 #	This is kernel module used to match DNS MX queries
