@@ -52,7 +52,7 @@ dns match options:
 [!] --query-type {A|NS|CNAME|SOA|WKS|PTR|MX|TXT|AAAA|SRV|NAPTR|IXFR|AXFR|ANY|0-255}
                        match specific query type
 [!] --edns0            match packets with EDNS0 field
-[!] --zone zone-name match request only to name under zone-name
+[!] --zone zone-name   match request only to name under zone-name
     --bufsize value[:value] match EDNS0 buffer size
 ```
 
