@@ -25,7 +25,7 @@ Install
 Red Hat/CentOS:
 ```
 yum install kernel-headers iptables-devel dkms
-wget https://github.com/spetr/xt_dns/archive/v2.0.tar.gz -O xt_dns-2.0.1.tar.gz
+wget https://github.com/spetr/xt_dns/archive/v2.0.1.tar.gz -O xt_dns-2.0.1.tar.gz
 tar -xzf xt_dns-2.0.1.tar.gz
 cd xt_dns-2.0.1
 make dkms
@@ -34,7 +34,7 @@ make dkms
 Debian/Ubuntu:
 ```
 apt-get install linux-headers-$(uname -r) iptables-dev dkms
-wget https://github.com/spetr/xt_dns/archive/v2.0.tar.gz -O xt_dns-2.0.1.tar.gz
+wget https://github.com/spetr/xt_dns/archive/v2.0.1.tar.gz -O xt_dns-2.0.1.tar.gz
 tar -xzf xt_dns-2.0.1.tar.gz
 cd xt_dns-2.0.1
 make dkms
