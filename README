@@ -1,7 +1,9 @@
 Netfilter extension to match various DNS atributes
 ==================================================
 
-by Ondřej Caletka, 2013
+by Stanislav Petr, 2015
+
+based on work of Ondřej Caletka, 2013
 
 This work is based on the original xt_dns netfilter
 extension, written by Bartłomiej Korupczyński

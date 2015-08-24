@@ -1,6 +1,7 @@
 /*
  *	xt_dns
- *      Copyright (c) Ondrej Caletka, 2013
+ *      Copyright (c) Stanislav Petr, 2015
+ *      based on libxt_dns (c) Ondrej Caletka, 2013
  *	based on xt_dns (c) Bartlomiej Korupczynski, 2011
  *
  *	This is kernel part of module used to match DNS queries
@@ -421,7 +422,7 @@ static void __exit dns_exit(void)
 
 module_init(dns_init);
 module_exit(dns_exit);
-MODULE_AUTHOR("Ondrej Caletka <ondrej@caletka.cz>");
+MODULE_AUTHOR("Stanislav Petr <stanislav@petr.email>");
 MODULE_DESCRIPTION("Xtables: DNS matcher");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("ipt_dns");
