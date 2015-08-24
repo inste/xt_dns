@@ -92,6 +92,9 @@ dkms:
 	@cp `pwd`/libxt_dns.c $(DKMS_ROOT_PATH)
 	@cp `pwd`/xt_dns.c $(DKMS_ROOT_PATH)
 	@cp `pwd`/xt_dns.h $(DKMS_ROOT_PATH)
+	@cd $(DKMS_ROOT_PATH)
+	@make userspace
+	@make userspace-install
 	@dkms add -m $(NAME) -v $(VERSION)
 	@dkms build -m $(NAME) -v $(VERSION)
 	@dkms install --force -m $(NAME) -v $(VERSION)
