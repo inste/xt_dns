@@ -75,10 +75,10 @@ Allow only DNS queries to be forwarded from client subnet and only DNS responses
 ```
 # iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 \
  -m dns --dns-query -j ACCEPT
-# iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 -j DROP
-# iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: \
+# iptables -A FORWARD -s 192.168.0.0/24 -p udp --dport 53 -j DROP
+# iptables -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: \
  -m dns --dns-response -j ACCEPT
-# iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -j DROP
+# iptables -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 -j DROP
 ```
 
 Drop AXFR queries (opcode 0, query type 252) send over UDP - used by some DDoS attacks (AXFR sessions over UDP transport are not defined - RFC5936):
