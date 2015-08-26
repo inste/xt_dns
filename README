@@ -81,7 +81,7 @@ Allow only DNS queries to be forwarded from client subnet and only DNS responses
 # iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -j DROP
 ```
 
-Drop AXFR queris (opcode 0, query type 252) send over UDP - used by some DDoS attacks (AXFR sessions over UDP transport are not defined - RFC5936):
+Drop AXFR queries (opcode 0, query type 252) send over UDP - used by some DDoS attacks (AXFR sessions over UDP transport are not defined - RFC5936):
 
 ```iptables -A INPUT -p udp --dport 53 -m dns --dns-query --dns-query-type AXFR -j DROP```
 
