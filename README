@@ -62,18 +62,22 @@ Example usage
 Classifying ANY-type DNS queries (massively abused for DNS Amplification attacks)
 and applying a very strict request rate limit:
 
-```# iptables -A INPUT -p udp --dport 53 
- -m dns --dns-query --dns-query-type ANY 
- -m hashlimit --hashlimit-above 10/min --hashlimit-burst 3
-    --hashlimit-mode srcip --hashlimit-name DNS-ANY
- -j DROP ```
+```
+# iptables -A INPUT -p udp --dport 53 \
+ -m dns --dns-query --dns-query-type ANY \
+ -m hashlimit --hashlimit-above 10/min --hashlimit-burst 3 \
+    --hashlimit-mode srcip --hashlimit-name DNS-ANY \
+ -j DROP
+```
 
 Allow only DNS queries to be forwarded from client subnet and only DNS responses to client subnet on DNS ports:
 
-```# iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 -m dns --dns-query -j ACCEPT
- # iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 -j DROP
- # iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -m dns --dns-response -j ACCEPT
- # iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -j DROP```
+```
+# iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 -m dns --dns-query -j ACCEPT
+# iptables -A FORWARD -s 192.168.0.0/24 -p udp --sport 1024: --dport 53 -j DROP
+# iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -m dns --dns-response -j ACCEPT
+# iptabels -A FORWARD -d 192.168.0.0/24 -p udp --sport 53 --dport 1024: -j DROP
+```
 
 Drop AXFR queris (opcode 0, query type 252) send over UDP - used by some DDoS attacks (AXFR sessions over UDP transport are not defined - RFC5936):
 
